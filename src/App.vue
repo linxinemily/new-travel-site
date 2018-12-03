@@ -26,9 +26,8 @@
               </div>
               <div class="categories">
                 <h4 class="nav__title">Free</h4>
-                  <el-checkbox-group v-model="free">
-                    <el-checkbox label="免費參觀">免費參觀</el-checkbox>
-                  </el-checkbox-group>
+                  <input type="checkbox" v-model="free" id="free">
+                  <label for="free">免費參觀</label>
               </div>
             </div>
           </div>
@@ -57,6 +56,7 @@
                 <div class="content">
                   <h3>{{ item.Name }}</h3>
                   <p class="description">{{ item.Description }}</p>
+                  <p>{{ item.Ticketinfo }}</p>
                   <!-- <div class="authorAndCate">
                     <p class="author">Ethan Foster</p>
                     <p class="cate">Entertainment</p>
@@ -79,19 +79,15 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 import axios from 'axios';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
   data () {
     return{
       zones:[],
       checkZones:[],
-      free:[],
+      free: false,
       value:'',
       items:[],
     }
@@ -106,7 +102,7 @@ export default {
         arr.push(response.data.result.records[i].Zone)
       }
       for(let i = 0 ; i < arr.length;i++){
-      if(!newArr.includes(response.data.result.records[i].Zone)){
+      if(!newArr.includes(response.data.result.records[i].Zone) ){
             newArr.push(response.data.result.records[i].Zone)
         }
       }
@@ -119,20 +115,38 @@ export default {
   computed:{
     filtered () {
       let items = []
-      if(this.items.length > 0){
-        if(this.checkZones.length !== 0){ //如果目前選中的地區陣列不是空的，執行以下程式
+      if(this.items.length > 0) {
+        if(this.checkZones.length !== 0) { //如果目前選中的地區陣列不是空的，執行以下程式
           // 現在選中的地區有這些，把包含這些選中的地區的物件顯示出來
-          for (let i = 0 ; i < this.items.length; i++){
-              if(this.checkZones.includes(this.items[i].Zone)){
-                items.push(this.items[i])
+          for (let i = 0 ; i < this.items.length; i++) {
+            if (this.checkZones.includes(this.items[i].Zone)) {
 
+              if (!this.free) {
+                items.push(this.items[i])
               }
+
+              if (this.free && this.items[i].Ticketinfo === '免費參觀') {
+                items.push(this.items[i])
+              }
+
+            }
           }
           return items
-        }else{
+        } else {
           //如果目前的選中地區陣列是空的，就顯示所有的物件
-          return this.items
+          for (let item of this.items) {
+            if (!this.free) {
+              items.push(item)
+            }
+
+            if (this.free && item.Ticketinfo === '免費參觀') {
+              items.push(item)
+            }
+          }
+          return items
         }
+      } else {
+        return this.items
       }
     },
     resultZones () {
