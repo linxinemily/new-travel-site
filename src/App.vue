@@ -8,7 +8,7 @@
           </div>
           <div class="search-bar">
                 <i class="fas fa-search search-icon"></i>
-              <input type="text" name="search" class="search-text" placeholder="Explore your own activities"><br>
+              <input type="text" name="search" class="search-text" placeholder="Explore your own activities" v-model="searchWords"><br>
           </div>
         </div>
       </div>
@@ -90,6 +90,7 @@ export default {
       free: false,
       value:'',
       items:[],
+      searchWords:''
     }
   },
   mounted () {
@@ -115,39 +116,61 @@ export default {
   computed:{
     filtered () {
       let items = []
-      if(this.items.length > 0) {
-        if(this.checkZones.length !== 0) { //如果目前選中的地區陣列不是空的，執行以下程式
-          // 現在選中的地區有這些，把包含這些選中的地區的物件顯示出來
-          for (let i = 0 ; i < this.items.length; i++) {
-            if (this.checkZones.includes(this.items[i].Zone)) {
 
-              if (!this.free) {
-                items.push(this.items[i])
-              }
-
-              if (this.free && this.items[i].Ticketinfo === '免費參觀') {
-                items.push(this.items[i])
-              }
-
-            }
-          }
-          return items
-        } else {
-          //如果目前的選中地區陣列是空的，就顯示所有的物件
-          for (let item of this.items) {
-            if (!this.free) {
-              items.push(item)
-            }
-
-            if (this.free && item.Ticketinfo === '免費參觀') {
-              items.push(item)
-            }
-          }
-          return items
-        }
-      } else {
+      if (this.items.length <= 0) {
         return this.items
       }
+
+      for (let item of this.items) {
+        let zoneIsInclude = this.checkZones.length === 0 ? true : (this.checkZones.includes(item.Zone))
+        let searchWordsInclude = this.searchWords === '' ? true : item.Name.includes(this.searchWords)
+
+        if (zoneIsInclude && searchWordsInclude) {
+          if (!this.free) {
+            items.push(item)
+          }
+
+          if (this.free && item.Ticketinfo === '免費參觀') {
+            items.push(item)
+          }
+        }
+      }
+
+      return items
+
+      // if(this.items.length > 0) {
+      //   if(this.checkZones.length !== 0) { //如果目前選中的地區陣列不是空的，執行以下程式
+      //     // 現在選中的地區有這些，把包含這些選中的地區的物件顯示出來
+      //     for (let i = 0 ; i < this.items.length; i++) {
+      //       if (this.checkZones.includes(this.items[i].Zone)) {
+
+      //         if (!this.free) {
+      //           items.push(this.items[i])
+      //         }
+
+      //         if (this.free && this.items[i].Ticketinfo === '免費參觀') {
+      //           items.push(this.items[i])
+      //         }
+
+      //       }
+      //     }
+      //     return items
+      //   } else {
+      //     //如果目前的選中地區陣列是空的，就顯示所有的物件
+      //     for (let item of this.items) {
+      //       if (!this.free) {
+      //         items.push(item)
+      //       }
+
+      //       if (this.free && item.Ticketinfo === '免費參觀') {
+      //         items.push(item)
+      //       }
+      //     }
+      //     return items
+      //   }
+      // } else {
+      //   return this.items
+      // }
     },
     resultZones () {
       return this.checkZones
@@ -157,6 +180,9 @@ export default {
     deleteZone (result) {
       let index = this.checkZones.indexOf(result)
       this.checkZones.splice(index,1)
+    },
+    filterFree (items) {
+
     }
   }
 
