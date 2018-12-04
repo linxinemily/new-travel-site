@@ -43,8 +43,8 @@
                 </div>
               </div>
         </div>
-        <div class="cards" v-for="item in filtered" v-bind:key="item._id">
-            <div class="mycard">
+        <div class="cards" v-for="(item,i) in filtered" v-bind:key="item._id">
+            <div class="mycard" v-show="setPaginate(i)">
               <div class="card__left">
                 <div class="imgBox">
                   <div class="imgBox__inner">
@@ -69,6 +69,14 @@
               </div>
             </div>
           </div>
+           <!-- <b-pagination size="md" :total-rows="filtered.length"  :per-page="10">
+    </b-pagination> -->
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :total="filtered.length"
+              :current-page.sync="current">
+            </el-pagination>
         </div>
       </div>
     </div>
@@ -80,9 +88,14 @@
 
 <script>
 import axios from 'axios';
+import bPagination from 'bootstrap-vue/es/components/pagination/pagination';
+
 
 export default {
   name: 'App',
+  components:{
+    bPagination
+  },
   data () {
     return{
       zones:[],
@@ -90,7 +103,10 @@ export default {
       free: false,
       value:'',
       items:[],
-      searchWords:''
+      searchWords:'',
+      current:1,
+      paginate: 10,
+
     }
   },
   mounted () {
@@ -108,6 +124,7 @@ export default {
         }
       }
       this.zones = newArr
+      // this.paginate_total = this.filtered.length/this.paginate;
 
     })).catch((err) => {
       alert('sorry,something is wrong!')
@@ -181,11 +198,16 @@ export default {
       let index = this.checkZones.indexOf(result)
       this.checkZones.splice(index,1)
     },
-    filterFree (items) {
 
-    }
-  }
-
+     setPaginate (x) {
+       if (this.current == 1) {
+         return x <= this.paginate;
+       }
+       else {
+         return (x > (this.paginate * (this.current - 1)) && x < (this.current * this.paginate));
+       }
+     }
+   }
 }
 </script>
 
