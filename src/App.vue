@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <div class="header">
+      <div class="header" :class="{'headroom--unpinned': scrolled}"  v-on="handleScroll()">
         <div class="container">
           <div class="logo">
             <img src="https://hexschool.github.io/THE_F2E_Design/week2-filter/assets/logo.png" alt="" class="img-logo">
@@ -15,7 +15,6 @@
 
       <div class="main">
         <div class="container">
-          <div id="app">
           <div class="nav">
             <div class="nav__outer">
               <div class="location">
@@ -31,7 +30,6 @@
               </div>
             </div>
           </div>
-        </div>
         <div class="result">
           <h4 class="showResult">共找到<span> {{ filtered.length }} </span>筆資料</h4>
             <div class="tabs" >
@@ -56,7 +54,7 @@
                 <div class="content">
                   <h3>{{ item.Name }}</h3>
                   <p class="description">{{ item.Description }}</p>
-                  <p>{{ item.Ticketinfo }}</p>
+                  <div class="free" v-show="item.Ticketinfo === '免費參觀'">{{ item.Ticketinfo }}</div>
                   <!-- <div class="authorAndCate">
                     <p class="author">Ethan Foster</p>
                     <p class="cate">Entertainment</p>
@@ -106,6 +104,9 @@ export default {
       searchWords:'',
       current:1,
       paginate: 10,
+      limitPosition: 300,
+      scrolled: false,
+      lastPosition: 0
 
     }
   },
@@ -199,15 +200,34 @@ export default {
       this.checkZones.splice(index,1)
     },
 
-     setPaginate (x) {
+    setPaginate (x) {
        if (this.current == 1) {
          return x <= this.paginate;
        }
        else {
          return (x > (this.paginate * (this.current - 1)) && x < (this.current * this.paginate));
        }
-     }
-   }
+    },
+     handleScroll() {
+      if (this.lastPosition < window.scrollY && this.limitPosition < window.scrollY) {
+        this.scrolled = true;
+        // header is hidden
+      }
+
+      if (this.lastPosition > window.scrollY) {
+        this.scrolled = false;
+        // header shows
+      }
+
+      this.lastPosition = window.scrollY;
+    }
+   },
+    created() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+    destroyed() {
+      window.removeEventListener("scroll", this.handleScroll);
+    }
 }
 </script>
 
@@ -261,7 +281,6 @@ h5 {
 
 
 
-
 // header
 .header{
   height: 92px;
@@ -269,8 +288,14 @@ h5 {
   width: 100%;
   background: $color-primary;
   position: fixed;
-
-
+  will-change: transform;
+  transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
 }
 
 .container{
@@ -281,8 +306,8 @@ h5 {
 
 .logo{
   display: inline-block;
-
-  flex:1;
+  width: 300px;
+  margin: 0 auto;
 }
 .img-logo{
   padding:33px 0;
@@ -309,24 +334,20 @@ h5 {
 
 }
 
-
-
 .search-icon{
   font-size: 20px;
   color: $color-white;
    margin-right: 20px;
   display: inline-block;
-
-
 }
+
 .search-text{
   display: inline-block;
   width: 300px;
-
   background: transparent;
   border:0;
-
   outline: none;
+  color: $color-white
 }
 
 //main
@@ -334,9 +355,7 @@ h5 {
   padding-top: 92px;
 }
 .nav{
-
   float: left;
-
 }
 
 @media(max-width:768px){
@@ -376,6 +395,7 @@ h5 {
   width: calc(100% - 300px);
   margin-top: 24px;
   margin-left: 40px;
+  margin-bottom: 40px;
   float: left;
 }
 .showResult{
@@ -442,6 +462,8 @@ h5 {
   margin:24px 0;
   height: 220px;
   width: 780px;
+  position: relative;
+  overflow: hidden;
 
 }
 @media(max-width:1200px){
@@ -503,7 +525,7 @@ h5 {
   .nav{
     position:relative;
     width: 100%;
-
+    margin-top: 30px;
   }
 
   .location,.date,.categories,.nav__outer{
@@ -530,8 +552,24 @@ h5 {
 
 
 
-.card__right h3{
-    margin-top: 0;
+.card__right{
+    h3 {
+      margin-top: 0;
+    }
+    .free {
+      position:absolute;
+      right: -40px;
+      top: 20px;
+      background: #e26f6f;
+      width: 150px;
+      height: 30px;
+      transform: rotate(45deg);
+      line-height: 30px;
+      text-align: center;
+      color: $color-white;
+      text-shadow: 1px 1px 2px #c65153;
+    }
+
 }
 
 .imgBox{
@@ -558,7 +596,7 @@ h5 {
 // right
 
 .content{
-  padding: 24px 20px;
+  padding: 24px 28px 20px 24px;
 
   .description{
    font-size: 16px;
@@ -596,22 +634,10 @@ h5 {
 
 //page
 
-.w3-bar{
-  text-align: right;
+// panigation
+.number.active{
+  background-color: $color-secondary!important;
 }
 
-.w3-button{
-  color: $color-secondary !important;
-  background: #FFFFFF;
-  border: 1px solid #ECEEEF;
-  margin: 0;
-}
-.w3-button:hover{
-  text-decoration: none;
-}
-.w3-green{
-  background: $color-secondary !important;
-  color: #fff !important;
-}
-.w3-button.arrow{color: #000 !important;}
+
 </style>
