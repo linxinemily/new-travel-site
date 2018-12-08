@@ -1,6 +1,14 @@
-# new-travel
+# 高雄旅遊網站
 
-> A Vue.js project
+> 使用Vue.js、Bootstrap4、element UI
+> 主要練習項目：
+1. API資料串接（axios)
+2. 多重篩選功能：search + Checkbox
+3. Pagination
+
+次要練習項目：
+1. RWD
+2. SCSS
 
 ## Build Setup
 
