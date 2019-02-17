@@ -1,39 +1,32 @@
-# 高雄旅遊網站
+# Kaohsiung Travel Site
 
-> 使用Vue.js、Bootstrap4、element UI
+> A web app build with vue CLI 
 
-#### 主要練習項目：
-1. API資料串接（axios)
-2. 多重篩選功能：search + Checkbox
-3. Pagination
+## DEMO
+https://linxinemily.github.io/new-travel-site/#/
 
-#### 次要練習項目：
-1. RWD
-2. SCSS
+## Intro
+It's a front-end project for practicing, main features are including:
+1. multiple filter (checkbox + search)
+2. pagination
+3. users can click each attraction introduction card to visit the detail page
 
-## Build Setup
+### Practice items
+1. Vue.js
+2. Vue CLI
+3. Vue router
+4. Vue componentization
+5. API connection
+6. UI(RWD, SCSS)
 
-``` bash
-# install dependencies
-npm install
+### Libraries
 
-# serve with hot reload at localhost:8080
-npm run dev
+for development
+- axios
+- sass loader
 
-# build for production with minification
-npm run build
+for UI
+- Bootstrap 4
+- bootstrap-vue
+- Element UI
 
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
