@@ -1,7 +1,7 @@
 <template>
   <div class="container info-section">
     <div class="breadCrumb mt-4">
-        <a href="/">首頁</a> / <span>{{ item.Name }}</span>
+        <a href="#" @click.prevent="router.push('/')">首頁</a> / <span>{{ item.Name }}</span>
     </div>
     <div class="">
         <div class="img-outer">
