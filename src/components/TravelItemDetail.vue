@@ -1,7 +1,7 @@
 <template>
   <div class="container info-section">
     <div class="breadCrumb mt-4">
-        <a href="#" @click.prevent="router.push('/')">首頁</a> / <span>{{ item.Name }}</span>
+        <a href="#" @click.prevent="gotoHomePage">首頁</a> / <span>{{ item.Name }}</span>
     </div>
     <div class="">
         <div class="img-outer">
@@ -24,12 +24,12 @@
 
 <script>
 import axios from 'axios'
-
+import { mapGetters } from 'vuex'
 
 export default {
   data () {
     return {
-      item: null
+      item: ''
     }
   },
   mounted () {
@@ -38,7 +38,7 @@ export default {
       this.$store.commit('items_fetched', response.data.result.records)
       // this.items = response.data.result.records
       let id = this.$route.params.id
-      for (let item of this.$store.state.items) {
+      for (let item of this.loadedItems) {
         if (item.Id === id) {
           this.item = item
           break
@@ -48,8 +48,14 @@ export default {
     })).catch((err) => {
       alert('sorry,something is wrong!')
     })
-
-
+  },
+  computed: {
+    ...mapGetters(['loadedItems'])
+  },
+  methods: {
+    gotoHomePage() {
+      this.$router.push('/')
+    }
   }
 }
 </script>

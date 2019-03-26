@@ -72,7 +72,8 @@
               background
               layout="prev, pager, next"
               :total="filtered.length"
-              :current-page.sync="current">
+              :current-page.sync="current"
+              class="mb-5 pagination">
             </el-pagination>
         </div>
       </div>
@@ -631,6 +632,8 @@ h5 {
 .number.active{
   background-color: $color-secondary!important;
 }
-
+.pagination {
+ overflow-x:  auto;
+}
 
 </style>

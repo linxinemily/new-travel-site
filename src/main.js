@@ -15,12 +15,17 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
-Vue.use(BootstrapVue);
-Vue.use(ElementUI);
+Vue.use(BootstrapVue)
+Vue.use(ElementUI)
 
 const store = new Vuex.Store({
   state: {
-    items:[]
+    items: []
+  },
+  getters: {
+    loadedItems: (state) => {
+      return state.items
+    }
   },
   mutations: {
     items_fetched (state, data) {
@@ -28,8 +33,6 @@ const store = new Vuex.Store({
     }
   }
 })
-
-
 const routes = [
   { path: '/', component: Travel },
   { path: '/hello', component: HelloWorld },
